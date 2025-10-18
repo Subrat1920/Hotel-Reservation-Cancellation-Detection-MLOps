@@ -1,0 +1,93 @@
+stages:
+  Data_Ingestion_from_GCP_Bucket:
+    cmd: echo "extraction of data from api"
+    deps:
+      - src\data_ingestion.py
+    outs:
+      - artifacts/raw/train.csv
+      - artifacts/raw/test.csv
+    desc: "Extract data from remote API"
+
+  Train_CSV:
+    cmd: echo "Training Data"
+    deps:
+      - artifacts/raw/train.csv
+    outs:
+      - temp_train.json
+  
+  Test_CSV:
+    cmd: echo "Testing Data"
+    deps: 
+      - artifacts/raw/test.csv
+    outs:
+      - temp_test.json
+
+  Data_Processing:
+    cmd: python src/data_processing.py
+    deps:
+      - temp_train.json
+      - temp_test.json
+    outs:
+      - artifacts/processed/process_train.csv
+      - artifacts/processed/process_test.csv
+    desc: "Data extracted from remote PostgreSQL DB"
+  
+  Processed_Train_CSV:
+    cmd: echo "Processed Training Data"
+    deps:
+      - artifacts/processed/process_train.csv
+    outs:
+      - train_processed_data.json
+
+  Processed_Test_CSV:
+    cmd: echo "Processed Testing Data"
+    deps:
+      - artifacts/processed/process_test.csv
+    outs:
+      - test_processed_data.json
+
+  Model_Training:
+    cmd: echo "Training the Model"
+    deps:
+      - src/custom/data_ingestion.py
+      - test_processed_data.json
+      - train_processed_data.json
+    outs:
+      - artifacts/models/best_model.pkl
+  
+  Model_Pickle_File:
+    cmd: echo "Model Pickle File"
+    deps:
+      - artifacts/models/best_model.pkl
+    outs:
+      - temp_model_file.json
+  
+  Model_Served_With_Flask:
+    cmd: echo "Flask App"
+    deps:
+      - temp_model_file.json
+    outs:
+      - docker_image.json
+  
+  Dockerizing_APP:
+    cmd: echo "docker_image"
+    deps:
+      - docker_image.json
+    outs:
+      - temp_docker_cloud_image.json
+  
+  Google_Cloud_Regsistry:
+    cmd: echo "Google Cloud Image Registration"
+    deps:
+      - temp_docker_cloud_image.json
+    outs:
+      - live_web_app.json
+  
+  Live_Web_App:
+    cmd: echo "Live Web Application"
+    deps:
+      - live_web_app.json
+    outs:
+      - your_live_web_app.com
+  
+      
