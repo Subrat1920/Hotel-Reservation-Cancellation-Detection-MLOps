@@ -1,0 +1,23 @@
+pandas
+numpy
+matplotlib
+seaborn
+flask
+scikit-learn
+google-cloud-storage
+PyYAML
+python-dotenv
+ipykernel
+jupyter
+notebook
+statsmodels
+imblearn
+catboost
+xgboost
+lightgbm
+mlflow
+dvc
+dvc-s3
+dagshub
+
+- e.
