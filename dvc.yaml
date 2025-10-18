@@ -49,7 +49,6 @@ stages:
   Model_Training:
     cmd: echo "Training the Model"
     deps:
-      - src/custom/data_ingestion.py
       - test_processed_data.json
       - train_processed_data.json
     outs:
